@@ -13,6 +13,7 @@
 		9AAFE3F926319B5A00ADC31C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9AAFE3F726319B5A00ADC31C /* Main.storyboard */; };
 		9AAFE3FB26319B5D00ADC31C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AAFE3FA26319B5D00ADC31C /* Assets.xcassets */; };
 		9AAFE3FE26319B5D00ADC31C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9AAFE3FC26319B5D00ADC31C /* LaunchScreen.storyboard */; };
+		9AAFE40B2631A5C100ADC31C /* Models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AAFE40A2631A5C100ADC31C /* Models.scnassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		9AAFE3FA26319B5D00ADC31C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9AAFE3FD26319B5D00ADC31C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9AAFE3FF26319B5D00ADC31C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9AAFE40A2631A5C100ADC31C /* Models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Models.scnassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				9AAFE3FA26319B5D00ADC31C /* Assets.xcassets */,
 				9AAFE3FC26319B5D00ADC31C /* LaunchScreen.storyboard */,
 				9AAFE3FF26319B5D00ADC31C /* Info.plist */,
+				9AAFE40A2631A5C100ADC31C /* Models.scnassets */,
 			);
 			path = ARKitMission;
 			sourceTree = "<group>";
@@ -125,6 +128,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AAFE3FE26319B5D00ADC31C /* LaunchScreen.storyboard in Resources */,
+				9AAFE40B2631A5C100ADC31C /* Models.scnassets in Resources */,
 				9AAFE3FB26319B5D00ADC31C /* Assets.xcassets in Resources */,
 				9AAFE3F926319B5A00ADC31C /* Main.storyboard in Resources */,
 			);
