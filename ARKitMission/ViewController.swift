@@ -94,6 +94,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         plantNode.scale = SCNVector3(0.005, 0.005, 0.005)
         // plantNodeを配置
         node.addChildNode(plantNode)
+        
+        // positionが4つ以上の時
+        if positions.count > 3 {
+            //最初のnodeの座標
+            let firstPos = positions[0]
+            //最後のnodeの座標
+            let lastPos = positions[positions.count - 1]
+            
+            let pos = SCNVector3(x: lastPos.x - firstPos.x,
+                                 y: lastPos.y - firstPos.y,
+                                 z: lastPos.z - firstPos.z)
+            
+            //最初の座標と最後の座標の距離
+            let distance = sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z)
+            
+            //distanceが一定値未満になったときに終了する
+            if distance < 10 {
+                //sessionを中断
+                sceneView.session.pause()
+            }
+        }
     }
 }
 
