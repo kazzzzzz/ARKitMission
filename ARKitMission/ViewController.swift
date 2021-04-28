@@ -12,6 +12,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet weak var sceneView: ARSCNView!
     
+    /// objectを配置する際にタップした座標の配列
+    private var positions : [simd_float4] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         sceneView.scene = SCNScene()
@@ -30,6 +33,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // タップハンドラの登録
         let gesture = UITapGestureRecognizer(target: self, action: #selector(onTap))
         self.sceneView.addGestureRecognizer(gesture)
+        
+        // ロングタップハンドラの登録
+        let longTapGesture = UILongPressGestureRecognizer(target: self, action: #selector(onLongTap))
+        self.sceneView.addGestureRecognizer(longTapGesture)
     }
     
     @objc func onTap(sender: UITapGestureRecognizer) {
@@ -37,10 +44,41 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let results = sceneView.hitTest(sender.location(in: sceneView),types: .featurePoint)
         guard !results.isEmpty else { return }
         if let result = results.first {
+            // hitTestの結果をワールド座標系に変換
+            let transform = result.worldTransform
             let anchor = ARAnchor(name: "plantAnchor",
-                                  transform: result.worldTransform)
+                                  transform: transform)
             // ARセッションにanchorを追加
             sceneView.session.add(anchor: anchor)
+            
+            let position = transform.columns.3
+            positions.append(position)
+        }
+    }
+    
+    @objc func onLongTap(sender: UILongPressGestureRecognizer) {
+        // ロングタップ中かどうか
+        guard  sender.state == .began else { return }
+        
+        let results = sceneView.hitTest(sender.location(in: sceneView))
+        
+        if let result = results.first {
+            // hitTestの結果のnodeをワールド座標系に変換した行列
+            let transform = result.modelTransform
+            
+            // 子nodeのなまえが"plant"かどうか
+            guard result.node.parent!.name == "plant" else { return }
+    
+            for i in 0 ..< positions.count {
+                //onTap時のhitTest結果とlongTap時のhitTest結果の座標が等しいかどうか
+                if (positions[i].x == transform.m41) && (positions[i].y == transform.m42) && (positions[i].z == transform.m43) {
+                    
+                    // positionsから削除
+                    positions.remove(at: i)
+                    // nodeからオブジェクトを削除
+                    result.node.parent!.removeFromParentNode()
+                }
+            }
         }
     }
     
@@ -57,6 +95,5 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // plantNodeを配置
         node.addChildNode(plantNode)
     }
-
 }
 
