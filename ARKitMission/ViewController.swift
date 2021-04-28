@@ -14,6 +14,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     /// objectを配置する際にタップした座標の配列
     private var positions : [simd_float4] = []
+    /// 2点間の距離を保存しておく配列
+    private var distances : [Float] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,23 +100,44 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // positionが4つ以上の時
         if positions.count > 3 {
             //最初のnodeの座標
-            let firstPos = positions[0]
+            let startPos = positions[0]
             //最後のnodeの座標
-            let lastPos = positions[positions.count - 1]
-            
-            let pos = SCNVector3(x: lastPos.x - firstPos.x,
-                                 y: lastPos.y - firstPos.y,
-                                 z: lastPos.z - firstPos.z)
+            let endPos = positions[positions.count - 1]
             
             //最初の座標と最後の座標の距離
-            let distance = sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z)
+            let distance = calcDistance(start: startPos, end: endPos)
             
             //distanceが一定値未満になったときに終了する
             if distance < 10 {
+                //2点間の距離を計算し、データを保存する
+                for i in 0 ..< positions.count - 1 {
+                    let posDistance = calcDistance(start: positions[i], end: positions[i+1])
+                    distances.append(posDistance)
+                }
                 //sessionを中断
                 sceneView.session.pause()
+                //メインスレッドで行う
+                DispatchQueue.main.async {
+                    // NextViewontrollerに遷移
+                    let nextVC = self.storyboard?.instantiateViewController(withIdentifier: "toNext") as? NextViewController
+                    if let nextVC = nextVC {
+                        nextVC.positions = self.positions
+                        nextVC.distances = self.distances
+                        self.present(nextVC, animated: true, completion: nil)
+                    }
+                }
             }
         }
+    }
+    
+    //2点間距離の計算
+    private func calcDistance(start:simd_float4, end:simd_float4) -> Float {
+        let d : Float
+        let pos = SCNVector3Make(end.x - start.x,
+                                 end.y - start.y,
+                                 end.z - start.z)
+        d = sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z )
+        return d
     }
 }
 

@@ -26,11 +26,37 @@
                     </view>
                     <connections>
                         <outlet property="sceneView" destination="SLu-a6-1fg" id="Lzc-CH-FYy"/>
+                        <segue destination="J6z-jI-lKM" kind="presentation" identifier="" id="RhR-yr-q6R"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="24.637681159420293" y="78.348214285714278"/>
+        </scene>
+        <!--Next View Controller-->
+        <scene sceneID="Ek3-Mp-P2r">
+            <objects>
+                <viewController storyboardIdentifier="toNext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="J6z-jI-lKM" customClass="NextViewController" customModule="ARKitMission" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" restorationIdentifier="nextVC" id="85E-S2-S25" customClass="ARSKView">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qdm-GG-Rfv">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="7Ml-fT-How"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="qdm-GG-Rfv" id="omP-7d-bv4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Iky-bF-RPg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="918.84057971014499" y="77.678571428571431"/>
         </scene>
     </scenes>
     <resources>
