@@ -26,7 +26,7 @@
                     </view>
                     <connections>
                         <outlet property="sceneView" destination="SLu-a6-1fg" id="Lzc-CH-FYy"/>
-                        <segue destination="J6z-jI-lKM" kind="presentation" identifier="" id="RhR-yr-q6R"/>
+                        <segue destination="J6z-jI-lKM" kind="presentation" identifier="toNext" id="RhR-yr-q6R"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

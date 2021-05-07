@@ -8,7 +8,7 @@
 import UIKit
 
 public extension UIView {
-    ///UIViewをUIImageに変換
+    /// UIViewをUIImageに変換
     func convertToImage() -> UIImage {
        let imageRenderer = UIGraphicsImageRenderer.init(size: bounds.size)
         return imageRenderer.image { context in

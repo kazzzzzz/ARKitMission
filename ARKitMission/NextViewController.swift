@@ -8,47 +8,47 @@
 import ARKit
 
 class NextViewController: UIViewController {
-    //図形を描画する画面
-    @IBOutlet weak var imageView: UIView!
+    // 図形を描画する画面
+    @IBOutlet private weak var imageView: UIView!
     
     private let drawView = DrawView()
     
-    public var positions:[simd_float4] = []
-    public var distances:[Float] = []
+    var positions: [simd_float4] = []
+    var distances: [Float] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //画像に記載する文字列を作成
-        var text : String = ""
+        // 画像に記載する文字列を作成
+        var text: String = ""
         let endNum = distances.count - 1
         for i in 0 ..< endNum {
-            text += "\(i+1)と\(i+2)の距離:\(distances[i])\n"
+            text += "\(i + 1)と\(i + 2)の距離:\(distances[i])\n"
             print(distances.count)
         }
         text += "\(distances.count)と1の距離:\(distances[endNum])"
         drawView.text = text
         
-        //画像に絵を描画
+        // 画像に絵を描画
         drawView.positions = positions
         
         drawView.backgroundColor = UIColor.white
         drawView.frame = CGRect(x: 0,
-                             y: 0,
-                             width: self.imageView.frame.width,
-                             height: self.imageView.frame.height)
+                                y: 0,
+                                width: self.imageView.frame.width,
+                                height: self.imageView.frame.height)
         self.imageView.addSubview(drawView)
         
-        //カメラロールに保存
+        // カメラロールに保存
         save()
     }
     
     // viewをimageに変換しカメラロールに保存する
     private func save() {
         // viewをimageとして取得
-        let image : UIImage = drawView.convertToImage()
+        let image: UIImage = drawView.convertToImage()
         
         // カメラロールに保存する
-        UIImageWriteToSavedPhotosAlbum(image,self,#selector(self.didFinishSavingImage(_:didFinishSavingWithError:contextInfo:)),
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(self.didFinishSavingImage(_: didFinishSavingWithError: contextInfo: )),
                                        nil)
     }
     
