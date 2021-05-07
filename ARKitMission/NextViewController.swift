@@ -9,9 +9,7 @@ import ARKit
 
 class NextViewController: UIViewController {
     // 図形を描画する画面
-    @IBOutlet private weak var imageView: UIView!
-    
-    private let drawView = DrawView()
+    @IBOutlet private weak var imageView: DrawView!
     
     var positions: [simd_float4] = []
     var distances: [Float] = []
@@ -26,18 +24,12 @@ class NextViewController: UIViewController {
             print(distances.count)
         }
         text += "\(distances.count)と1の距離:\(distances[endNum])"
-        drawView.text = text
+        imageView.text = text
         
         // 画像に絵を描画
-        drawView.positions = positions
+        imageView.positions = positions
         
-        drawView.backgroundColor = UIColor.white
-        drawView.frame = CGRect(x: 0,
-                                y: 0,
-                                width: self.imageView.frame.width,
-                                height: self.imageView.frame.height)
-        self.imageView.addSubview(drawView)
-        
+        imageView.backgroundColor = UIColor.white
         // カメラロールに保存
         save()
     }
@@ -45,7 +37,7 @@ class NextViewController: UIViewController {
     // viewをimageに変換しカメラロールに保存する
     private func save() {
         // viewをimageとして取得
-        let image: UIImage = drawView.convertToImage()
+        let image: UIImage = imageView.convertToImage()
         
         // カメラロールに保存する
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(self.didFinishSavingImage(_: didFinishSavingWithError: contextInfo: )),
