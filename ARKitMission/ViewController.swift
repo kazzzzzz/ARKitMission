@@ -12,6 +12,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet private weak var sceneView: ARSCNView!
     
+    var selectedItem: String? = "plant"
+    
     /// objectを配置する際にタップした座標の配列
     private var positions: [simd_float4] = []
     /// 2点間の距離を保存しておく配列
@@ -47,54 +49,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let results = sceneView.hitTest(sender.location(in: sceneView), types: .featurePoint)
         guard !results.isEmpty else { return }
         if let result = results.first {
-            // hitTestの結果をワールド座標系に変換
-            let transform = result.worldTransform
-            let anchor = ARAnchor(name: "plantAnchor",
-                                  transform: transform)
-            // ARセッションにanchorを追加
-            sceneView.session.add(anchor: anchor)
-            
-            let position = transform.columns.3
-            positions.append(position)
+            addItem(hitTestResult: result)
         }
-    }
-    
-    @objc func onLongTap(sender: UILongPressGestureRecognizer) {
-        // ロングタップ中かどうか
-        guard  sender.state == .began else { return }
-        
-        let results = sceneView.hitTest(sender.location(in: sceneView))
-        
-        if let result = results.first {
-            let transform = result.modelTransform
-            guard result.node.parent!.name == "plant" else { return }
-            
-            for i in 0 ..< positions.count {
-                // onTap時のhitTest結果とlongTap時のhitTest結果の座標が等しいかどうか
-                if (positions[i].x == transform.m41) && (positions[i].y == transform.m42) && (positions[i].z == transform.m43) {
-                    
-                    // positionsから削除
-                    positions.remove(at: i)
-                    // nodeからオブジェクトを削除
-                    result.node.parent!.removeFromParentNode()
-                }
-            }
-        }
-    }
-    
-    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard anchor.name == "plantAnchor" else { return }
-        
-        guard let scene = SCNScene(named: "plant.scn",
-                                   inDirectory: "Models.scnassets") else { return }
-        let plantNode = (scene.rootNode.childNode(withName: "plant",
-                                                  recursively: false))!
-        plantNode.scale = SCNVector3(0.005, 0.005, 0.005)
-        // plantNodeを配置
-        node.addChildNode(plantNode)
         
         // positionが4つ以上の時
         if positions.count > 3 {
+            
             let startPos = positions[0]
             let endPos = positions[positions.count - 1]
             
@@ -124,6 +84,30 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
+    @objc func onLongTap(sender: UILongPressGestureRecognizer) {
+        // ロングタップ中かどうか
+        guard  sender.state == .began else { return }
+        
+        let results = sceneView.hitTest(sender.location(in: sceneView))
+        
+        if let result = results.first {
+            let transform = result.modelTransform
+            guard result.node.parent!.name == selectedItem else { return }
+            
+            for i in 0 ..< positions.count {
+                // onTap時のhitTest結果とlongTap時のhitTest結果の座標が等しいかどうか
+                if (positions[i].x == transform.m41) && (positions[i].y == transform.m42) && (positions[i].z == transform.m43) {
+                    
+                    // positionsから削除
+                    positions.remove(at: i)
+                    // nodeからオブジェクトを削除
+                    result.node.parent!.removeFromParentNode()
+                    break
+                }
+            }
+        }
+    }
+    
     // 2点間距離の計算
     private func calcDistance(start: simd_float4, end: simd_float4) -> Float {
         let d: Float
@@ -132,5 +116,34 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                                  end.z - start.z)
         d = sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z )
         return d
+    }
+    
+    /// アイテムを配置する
+    func addItem(hitTestResult: ARHitTestResult) {
+        if let selectedItem = self.selectedItem {
+            // scnファイルから3Dモデルのノードを作成
+            let scene = SCNScene(named: "\(selectedItem).scn",
+                                 inDirectory: "Models.scnassets")
+            let node = (scene?.rootNode.childNode(withName: selectedItem,
+                                                  recursively: false))!
+            
+            let transform = hitTestResult.worldTransform
+            let thirdColumn = transform.columns.3
+            
+            // 3Dモデルを配置
+            node.position = SCNVector3(x: thirdColumn.x,
+                                       y: thirdColumn.y,
+                                       z: thirdColumn.z)
+            
+            node.scale = SCNVector3(0.005, 0.005, 0.005)
+            
+            node.name = selectedItem
+            
+            // シーンに追加
+            sceneView.scene.rootNode.addChildNode(node)
+            
+            // 配列に追加
+            positions.append(thirdColumn)
+        }
     }
 }
