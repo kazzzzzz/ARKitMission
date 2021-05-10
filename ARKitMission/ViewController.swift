@@ -17,11 +17,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         sceneView.scene = SCNScene()
-        
         sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
-
         sceneView.autoenablesDefaultLighting = true
-        
         sceneView.delegate = self
         
         model = ItemModel(view: sceneView)
@@ -49,30 +46,26 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             model.addItem(hitTestResult: result)
         }
         
-        // アイテムが4つ以上の時
-        if model.items.count > 3 {
-            
-            if model.checkItemsDistance() == true {
-                model.saveDistance()
-                
-                // sessionを中断
-                sceneView.session.pause()
-                // メインスレッドで行う
-                DispatchQueue.main.async {
-                    // NextViewontrollerに遷移
-                    let nextVC = self.storyboard?.instantiateViewController(withIdentifier: "toNext") as? NextViewController
-                    if let nextVC = nextVC {
-                        nextVC.positions = self.model.items
-                        nextVC.distances = self.model.distances
-                        self.present(nextVC, animated: true, completion: nil)
-                    }
+        // アイテムが4つ以上、かつ最初と最後のアイテムの距離がしきい値未満のとき
+        if (model.items.count > 3) && model.checkItemsDistance() {
+            // 距離データを保存
+            model.saveDistance()
+            // sessionを中断
+            sceneView.session.pause()
+            // メインスレッドで行う
+            DispatchQueue.main.async {
+                // NextViewontrollerに遷移
+                let nextVC = self.storyboard?.instantiateViewController(withIdentifier: "toNext") as? NextViewController
+                if let nextVC = nextVC {
+                    nextVC.positions = self.model.items
+                    nextVC.distances = self.model.distances
+                    self.present(nextVC, animated: true, completion: nil)
                 }
             }
         }
     }
     
     @objc func onLongTap(sender: UILongPressGestureRecognizer) {
-        // ロングタップ中かどうか
         guard  sender.state == .began else { return }
         
         let results = sceneView.hitTest(sender.location(in: sceneView))
@@ -84,7 +77,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
 }
 
-
+/// 計算処理やデータの保存などを行うクラス
 class ItemModel {
     /// 選択したアイテムの名前
     var selectedItem: String? = "plant"
