@@ -22,6 +22,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.delegate = self
         
         model = ItemModel(view: sceneView)
+        model.vc = self
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -45,23 +46,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if let result = results.first {
             model.addItem(hitTestResult: result)
         }
-        
-        // アイテムが4つ以上、かつ最初と最後のアイテムの距離がしきい値未満のとき
-        if (model.items.count > 3) && model.checkItemsDistance() {
-            // 距離データを保存
-            model.saveDistance()
-            // sessionを中断
-            sceneView.session.pause()
-            // メインスレッドで行う
-            DispatchQueue.main.async {
-                // NextViewontrollerに遷移
-                let nextVC = self.storyboard?.instantiateViewController(withIdentifier: "toNext") as? NextViewController
-                if let nextVC = nextVC {
-                    nextVC.model = self.model
-                    self.present(nextVC, animated: true, completion: nil)
-                }
-            }
-        }
+        // 次の画面に遷移
+        model.transition()
     }
     
     @objc func onLongTap(sender: UILongPressGestureRecognizer) {
@@ -72,6 +58,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if let result = results.first {
             // アイテムを削除
             model.removeItem(hitTestResult: result)
+        }
+    }
+    
+    /// NextViewControllerに遷移する
+    func segueNextVC() {
+        // メインスレッドで行う
+        DispatchQueue.main.async {
+            let nextVC = self.storyboard?.instantiateViewController(withIdentifier: "toNext") as? NextViewController
+            if let nextVC = nextVC {
+                nextVC.model = self.model
+                self.present(nextVC, animated: true, completion: nil)
+            }
         }
     }
 }

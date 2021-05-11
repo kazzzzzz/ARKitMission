@@ -10,6 +10,8 @@ import ARKit
 /// 計算処理やデータの保存などを行う
 struct ItemModel {
     
+    weak var vc: ViewController?
+    
     /// 選択したアイテムの名前
     var selectedItem: String? = "plant"
     /// アイテムを配置した座標の配列
@@ -69,6 +71,22 @@ struct ItemModel {
         }
     }
     
+    /// 次の画面に遷移する
+    mutating func transition() {
+        // アイテムが4つ以上、かつ最初と最後のアイテムの距離がしきい値未満のとき
+        if (items.count > 3) && checkItemsDistance() {
+            // 距離データを保存(ラベル出力用)
+            for i in 0 ..< items.count - 1 {
+                let d = calcDistance(start: items[i], end: items[i + 1])
+                distances.append(d)
+            }
+            // sessionを中断
+            sView.session.pause()
+            vc?.segueNextVC()
+        }
+        
+    }
+    
     /// アイテム間の距離がしきい値未満かどうか
     func checkItemsDistance() -> Bool {
         // 最初のアイテム
@@ -78,14 +96,6 @@ struct ItemModel {
         
         let distance = calcDistance(start: sItem, end: eItem)
         return distance < threshold
-    }
-    
-    // 距離の値を保存(ラベル出力用)
-    mutating func saveDistance() {
-        for i in 0 ..< items.count - 1 {
-            let d = calcDistance(start: items[i], end: items[i + 1])
-            distances.append(d)
-        }
     }
     
     /// 2点間距離の計算
