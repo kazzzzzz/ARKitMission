@@ -10,24 +10,20 @@ import ARKit
 class NextViewController: UIViewController {
     // 図形を描画する画面
     @IBOutlet private weak var imageView: DrawView!
-    
-    var positions: [simd_float4] = []
-    var distances: [Float] = []
+
+    var model: ItemModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        imageView.model = model
         // 画像に記載する文字列を作成
         var text: String = ""
-        let endNum = distances.count - 1
+        let endNum = model.distances.count - 1
         for i in 0 ..< endNum {
-            text += "\(i + 1)と\(i + 2)の距離:\(distances[i])\n"
-            print(distances.count)
+            text += "\(i + 1)と\(i + 2)の距離:\(model.distances[i])\n"
         }
-        text += "\(distances.count)と1の距離:\(distances[endNum])"
+        text += "\(model.distances.count)と1の距離:\(model.distances[endNum])"
         imageView.text = text
-        
-        // 画像に絵を描画
-        imageView.positions = positions
         
         imageView.backgroundColor = UIColor.white
         // カメラロールに保存

@@ -57,8 +57,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 // NextViewontrollerに遷移
                 let nextVC = self.storyboard?.instantiateViewController(withIdentifier: "toNext") as? NextViewController
                 if let nextVC = nextVC {
-                    nextVC.positions = self.model.items
-                    nextVC.distances = self.model.distances
+                    nextVC.model = self.model
                     self.present(nextVC, animated: true, completion: nil)
                 }
             }
