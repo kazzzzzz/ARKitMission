@@ -18,8 +18,8 @@ struct ItemModel {
     var items: [simd_float4] = []
     /// 2点間の距離の配列
     var distances: [Float] = []
-    /// 2点間距離のしきい値
-    private let threshold: Float = 10.0
+    /// 2点間距離のしきい値(実距離の単位はメートル)
+    private let threshold: Float = 5.0
     /// nodeを配置するView
     private let sView: ARSCNView!
     
