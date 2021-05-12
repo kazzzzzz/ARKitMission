@@ -31,6 +31,8 @@ class DrawView: UIView {
         line.apply(CGAffineTransform(a: 31, b: 0, c: 0, d: 31, tx: -6200, ty: -12800))
         line.stroke()
         
+        self.text = model.makeLabelText()
+            
         self.text.draw(at: CGPoint(x: 10, y: self.frame.height - 100))
     }
 }

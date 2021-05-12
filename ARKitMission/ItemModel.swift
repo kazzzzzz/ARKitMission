@@ -13,11 +13,11 @@ struct ItemModel {
     weak var vc: ViewController?
     
     /// 選択したアイテムの名前
-    var selectedItem: String? = "plant"
+    private let selectedItem: String? = "plant"
     /// アイテムを配置した座標の配列
     var items: [simd_float4] = []
     /// 2点間の距離の配列
-    var distances: [Float] = []
+    private var distances: [Float] = []
     /// 2点間距離のしきい値(実距離の単位はメートル)
     private let threshold: Float = 5.0
     /// nodeを配置するView
@@ -26,6 +26,8 @@ struct ItemModel {
     init(view: ARSCNView) {
         self.sView = view
     }
+    
+    // MARK: - ViewControllerにて呼ぶメソッド
     
     /// アイテムを配置する
     mutating func addItem(hitTestResult: ARHitTestResult) {
@@ -106,5 +108,18 @@ struct ItemModel {
                                  end.z - start.z)
         d = sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z )
         return d
+    }
+    
+    // MARK: - DrawViewにて呼ぶメソッド
+    
+    /// ラベル文字列を作成
+    func makeLabelText() -> String {
+        var text = ""
+        let endNum = distances.count - 1
+        for i in 0 ..< endNum {
+            text += "\(i + 1)と\(i + 2)の距離: \(distances[i])m\n"
+        }
+        text += "\(distances.count)と1の距離: \(distances[endNum])m"
+        return text
     }
 }

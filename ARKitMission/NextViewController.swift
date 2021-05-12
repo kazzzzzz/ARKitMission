@@ -16,14 +16,6 @@ class NextViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.model = model
-        // 画像に記載する文字列を作成
-        var text: String = ""
-        let endNum = model.distances.count - 1
-        for i in 0 ..< endNum {
-            text += "\(i + 1)と\(i + 2)の距離:\(model.distances[i])\n"
-        }
-        text += "\(model.distances.count)と1の距離:\(model.distances[endNum])"
-        imageView.text = text
         
         imageView.backgroundColor = UIColor.white
         // カメラロールに保存
